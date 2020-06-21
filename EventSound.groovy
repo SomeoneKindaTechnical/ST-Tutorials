@@ -1,6 +1,6 @@
 definition(
   name: "Event Sound",
-  namespace: "jhogan",
+  namespace: "SomeoneKindaTechnical",
   author: "Jonathan Hogan", 
   description: "Speak a message on a connected speaker or chime when a switch is turned on",
   category: "Convenience",
