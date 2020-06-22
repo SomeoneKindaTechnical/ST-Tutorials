@@ -7,7 +7,9 @@ definition(
   iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
   iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience%402x.png"
 )
-
+def clientVersion() {
+    return "01.00.00"
+}
 preferences {
   page(name: "mainPage", title: "Speak a message on a connected speaker or ring a chime when a switch is turned on", install: true, uninstall: true)
   page(name: "timeNotificationInput", title: "Only send notifications during a certain time:") {
