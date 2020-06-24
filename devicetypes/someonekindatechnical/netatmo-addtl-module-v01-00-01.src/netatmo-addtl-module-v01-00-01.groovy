@@ -23,7 +23,7 @@ metadata {
  	capability "Temperature Measurement"
         capability "Sensor"
         capability "Battery"
-	capability "Relative Humidity Measurement"
+	    capability "Relative Humidity Measurement"
         capability "Carbon Dioxide Measurement"
         capability "Refresh"
         capability "Health Check"
@@ -41,12 +41,12 @@ metadata {
     preferences {
         input title: "Settings", description: "To change units and time format, go to the Netatmo Connect App", displayDuringSetup: false, type: "paragraph", element: "paragraph"
         input title: "Information", description: "Your Netatmo station updates the Netatmo servers approximately every 10 minutes. The Netatmo Connect app polls these servers every 5 minutes. If the time of last update is equal to or less than 10 minutes, pressing the refresh button will have no effect", displayDuringSetup: false, type: "paragraph", element: "paragraph"
-        input title: "Tutorial", description: "This Device Driver is to be used as a tutorial only."
+        input title: "Tutorial", description: "This Device Driver is to be used as a tutorial only.", displayDuringSetup: false, type: "paragraph", element: "paragraph"
     }    
     
 
 	tiles (scale: 2) {
-		multiAttributeTile(name: "temperature", type: "generic", width: 6, height: 4) {
+		multiAttributeTile(name: "summary", type: "generic", width: 6, height: 4) {
 			tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
             	attributeState "temperature", label:'${currentValue}°', icon:"st.Weather.weather2", backgroundColors:[
  				[value: 31, color: "#153591"],
@@ -60,25 +60,43 @@ metadata {
             }
             tileAttribute ("humidity", key: "SECONDARY_CONTROL") {
 				attributeState "humidity", label:'Humidity: ${currentValue}%'
-			}           
+            }           
 		} 
- 		valueTile("carbonDioxide", "device.carbonDioxide", width: 2, height: 2, inactiveLabel: false) {
+ 		valueTile("temperature", "device.temperature", width: 6, height: 2, inactiveLabel: false) {
+ 			state "temperature", label:'${currentValue}°', unit:"degrees", icon:"st.Weather.weather2", backgroundColors: [
+  				[value: 31, color: "#153591"],
+ 				[value: 44, color: "#1e9cbb"],
+ 				[value: 59, color: "#90d2a7"],
+ 				[value: 74, color: "#44b621"],
+ 				[value: 84, color: "#f1d801"],
+ 				[value: 95, color: "#d04e00"],
+ 				[value: 96, color: "#bc2323"]
+ 				]
+ 		}
+ 		valueTile("humidity", "device.humidity", width: 6, height: 2, inactiveLabel: false) {
+ 			state "humidity", label:'${currentValue}%', unit:"percent", backgroundColors: [
+ 				[value: 600, color: "#44B621"],
+                [value: 999, color: "#ffcc00"],
+                [value: 1000, color: "#e86d13"]
+ 				]
+ 		}
+        valueTile("carbonDioxide", "device.carbonDioxide", width: 6, height: 2, inactiveLabel: false) {
  			state "carbonDioxide", label:'${currentValue}ppm', unit:"ppm", backgroundColors: [
  				[value: 600, color: "#44B621"],
                 [value: 999, color: "#ffcc00"],
                 [value: 1000, color: "#e86d13"]
  				]
  		}
-        valueTile("min_temp", "min_temp", width: 2, height: 1) {
- 			state "min_temp", label: 'Min: ${currentValue}°'
+        valueTile("min_temp", "device.min_temp", width: 6, height: 2, inactiveLable: false) {
+ 			state "min_temp", label: 'Min: ${currentValue}°', unit:"degrees"
  		}
-        valueTile("max_temp", "max_temp", width: 2, height: 1) {
+        valueTile("max_temp", "device.max_temp", width: 6, height: 2) {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}
-        valueTile("temp_trend", "temp_trend", width: 4, height: 1) {
+        valueTile("temp_trend", "device.temp_trend", width: 6, height: 2) {
  			state "temp_trend", label: 'Temp Trend: ${currentValue}'
  		}         
-		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
+		valueTile("battery", "device.battery", inactiveLabel: false, width: 6, height: 2) {
 			state "battery_percent", label:'Battery: ${currentValue}%', backgroundColors:[
                 [value: 20, color: "#ff0000"],
                 [value: 35, color: "#fd4e3a"],
@@ -89,7 +107,7 @@ metadata {
                 [value: 99, color: "#55fd3a"]
             ]
 		}     
-		valueTile("temperature", "device.temperature") {
+		valueTile("temperature_main", "device.temperature") {
  			state("temperature", label: '${currentValue}°', icon:"st.Weather.weather2", backgroundColors: [
  				[value: 31, color: "#153591"],
  				[value: 44, color: "#1e9cbb"],
@@ -101,22 +119,23 @@ metadata {
  				]
  				)
  		}
-        valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) { 			
+        valueTile("lastupdate", "device.lastupdate", width: 6, height: 2, inactiveLabel: false) { 			
             state "default", label:"Last updated: " + '${currentValue}' 		
             }
- 		valueTile("date_min_temp", "date_min_temp", width: 2, height: 1, inactiveLabel: false) { 			
+ 		valueTile("date_min_temp", "device.date_min_temp", width: 6, height: 2, inactiveLabel: false) { 			
           state "default", label:'${currentValue}' 		
           }
-        valueTile("date_max_temp", "date_max_temp", width: 2, height: 1, inactiveLabel: false) { 			
+        valueTile("date_max_temp", "device.date_max_temp", width: 6, height: 2, inactiveLabel: false) { 			
           state "default", label:'${currentValue}' 		
           }            
- 		standardTile("refresh", "device.refresh", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+ 		standardTile("refresh", "device.refresh", width: 6, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
  		}              
                
         main "temperature"
- 		details(["temperature", "min_temp","date_min_temp","carbonDioxide", "max_temp","date_max_temp", "temp_trend","lastupdate","battery","refresh"])
-	}
+/* 		details(["temperature", "humidity", "min_temp","date_min_temp","carbonDioxide", "max_temp","date_max_temp", "temp_trend","lastupdate","battery","refresh"]) */
+ 		details(["temperature", "humidity", "carbonDioxide"])
+}
 }
 
 // parse events into attributes
